@@ -1,0 +1,38 @@
+.gradient-background {
+    background: linear-gradient(135deg, #3c1053, #6a0572); 
+    height: 100vh; 
+    margin: 0; 
+    padding: 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    color: #b3b3b3; 
+    font-family: Arial, sans-serif; 
+    font-size: 12px;
+}
+
+#inputTarea {
+    
+    border: 2px solid #6a0572; 
+    border-radius: 5px; 
+    transition: all 0.3s ease-in-out; 
+    background-color: #ffffff;
+    max-height: 48px;
+}
+
+
+
+#inputTarea:focus {
+    border-color: #ffffff; 
+    color: #000; 
+}
+
+.btnAgregar{
+    
+    margin-bottom: 8px;
+    max-height: 48px;
+}
+
+.alinear{
+    padding:0 !important;
+}

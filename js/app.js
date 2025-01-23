@@ -24,11 +24,21 @@ const agregaTarea = (e) => {
   } else {
     const li = document.createElement("li");
     li.textContent = text;
+    li.className = "list-group-item d-flex justify-content-between align-items-center list-group-item-dark"
 
-    // Crear botón "Eliminar"
-    const btnEliminar = document.createElement("button");
-    btnEliminar.textContent = "Eliminar";
-    btnEliminar.addEventListener("click", eliminaTarea);
+
+     // Crear botón "Eliminar"
+     const btnEliminar = document.createElement("button");
+            
+     btnEliminar.addEventListener("click", eliminaTarea);
+     btnEliminar.className = "btn-floating btn-small waves-effect waves-light red"
+
+     const iconoBasurero = document.createElement("i");
+     iconoBasurero.className = "bi bi-trash"
+
+     btnEliminar.appendChild(iconoBasurero);
+
+     btnEliminar.addEventListener("click", eliminaTarea);
 
     //Agrega el btnEliminar al li
     li.appendChild(btnEliminar);
@@ -49,7 +59,7 @@ const agregaTarea = (e) => {
 };
   //Función eliminar tarea
   const eliminaTarea = (e) => {
-    const tarea = e.target.parentElement;
+    const tarea = e.target.parentElement.parentElement;
     const textoTarea = tarea.firstChild.textContent;
 
     lista.removeChild(tarea);
@@ -81,11 +91,21 @@ const imprimeTareas = () => {
         tareas.forEach((tarea) => {
             const li = document.createElement("li");
             li.textContent = tarea;
+            li.className = "list-group-item d-flex justify-content-between align-items-center list-group-item-dark mb-2"
 
             // Crear botón "Eliminar"
             const btnEliminar = document.createElement("button");
-            btnEliminar.textContent = "Eliminar";
+            
             btnEliminar.addEventListener("click", eliminaTarea);
+            btnEliminar.className = "btn-floating btn-small waves-effect waves-light red"
+
+            const iconoBasurero = document.createElement("i");
+            iconoBasurero.className = "bi bi-trash"
+
+            btnEliminar.appendChild(iconoBasurero);
+
+            btnEliminar.addEventListener("click", eliminaTarea);
+
 
             // Agregar el botón al <li>
             li.appendChild(btnEliminar);
