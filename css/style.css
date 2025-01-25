@@ -43,3 +43,23 @@
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Sombras suaves */
     
 }
+.text-decoration-line-through {
+    text-decoration: line-through;
+    color: gray !important;
+    font-size:16px !important;
+  }
+
+  
+  [type="checkbox"]:not(:checked),
+  [type="checkbox"]:checked {
+      position: static !important; /* Asegúrate de que se muestre correctamente */
+      opacity: 1 !important;      /* Hazlo visible */
+      pointer-events: auto !important; /* Permite la interacción */
+      z-index: 2000;
+  }
+
+  label{
+    font-size: 16px !important;
+    color:#000 !important;
+
+  }
