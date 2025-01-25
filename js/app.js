@@ -63,9 +63,10 @@ const sweetConfirmacionEliminar = async (titulo) => {
 };
 
 
-
-
-
+// Función para validar si la tarea ya existe
+const validaSiLaTareaExiste = (textoTarea) => {
+  return tareas.some((tarea) => tarea.texto.toLowerCase() === textoTarea.toLowerCase());
+};
 
 
 
@@ -145,6 +146,12 @@ const agregaTarea = (e) => {
     //Agrega la tarea a la lista
     lista.appendChild(li);
     */
+
+    if (validaSiLaTareaExiste(text)) {
+      
+      sweetError('Tarea duplicada','La tarea ya está agregada en la lista.','');
+      return; 
+    }
 
     tareas.push({ texto: text, isChecked: false }); // Agregamos la tarea al array
     // Ordenar el array antes de renderizar
