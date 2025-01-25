@@ -55,7 +55,7 @@
       position: static !important; /* Asegúrate de que se muestre correctamente */
       opacity: 1 !important;      /* Hazlo visible */
       pointer-events: auto !important; /* Permite la interacción */
-      z-index: 2000;
+      
   }
 
   label{
