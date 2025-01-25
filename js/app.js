@@ -1,4 +1,28 @@
-let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+//Valida estructura de array tareas
+const cargarTareasDesdeLocalStorage = () => {
+  let tareasGuardadas = JSON.parse(localStorage.getItem("tareas")) || [];
+
+  
+  const esEstructuraValida = Array.isArray(tareasGuardadas) && tareasGuardadas.every(tarea => {
+    return typeof tarea === "object" &&
+           "texto" in tarea &&
+           "isChecked" in tarea &&
+           typeof tarea.texto === "string" &&
+           typeof tarea.isChecked === "boolean";
+  });
+
+
+  if (!esEstructuraValida) {
+    tareasGuardadas = [];
+    localStorage.setItem("tareas", JSON.stringify([])); // Opcional: limpiar el localStorage
+  }
+
+  return tareasGuardadas;
+};
+
+
+
+let tareas = cargarTareasDesdeLocalStorage()
 
 const input = document.querySelector("input");
 const btnAgregar = document.querySelector(".btnAgregar");
