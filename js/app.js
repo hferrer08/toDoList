@@ -9,23 +9,60 @@ const guardarEnLocalStorage = () => {
   localStorage.setItem("tareas", JSON.stringify(tareas));
 };
 
+//Mensajes sweetAlert2
+
+const sweetError = ( titulo, texto, textoFooter, icono) => {
+  
+  if (!icono || icono === undefined || icono === null){
+    icono: 'error'
+  }
+
+  Swal.fire({
+    icon: 'error',
+    title: titulo,
+    text: texto,
+    footer: textoFooter
+  });
+
+};
+
+const sweetConfirmacionEliminar = async (titulo) => {
+  const result = await Swal.fire({
+    title: titulo,
+    showDenyButton: true,
+    showCancelButton: false,
+    confirmButtonText: "Sí",
+    denyButtonText: "No",
+  });
+
+  return result.isConfirmed;  // Retorna si el usuario confirmó (hizo clic en "Sí")
+};
+
+
+
+
+
+
+
+
 //Función revisa check
 const revisaCambioCheck = (e) => {
   const li = e.target.closest("li");
   const textoTarea = li.querySelector("label").textContent.trim(); // Limpia espacios extra
 
   // Cambiar estilo del <li>
-  if (e.target.checked) {
-    li.classList.add("text-decoration-line-through");
-  } else {
-    li.classList.remove("text-decoration-line-through");
-  }
+ // if (e.target.checked) {
+  //  li.classList.add("text-decoration-line-through");
+ // } else {
+  //  li.classList.remove("text-decoration-line-through");
+  //}
 
   // Actualizar el array de tareas
   const tareaIndex = tareas.findIndex((tarea) => tarea.texto.trim() === textoTarea.trim()); // Compara texto limpio
   if (tareaIndex !== -1) {
     tareas[tareaIndex].isChecked = e.target.checked; // Actualiza isChecked
     guardarEnLocalStorage(); // Guarda los cambios
+    imprimeTareas();
   }
 };
 
@@ -35,8 +72,9 @@ const agregaTarea = (e) => {
   const text = input.value.trim();
 
   if (text === "") {
-    alert("Por favor, escribe una tarea.");
+    sweetError('Error',"Por favor, escribe una tarea.",'');
   } else {
+    /*
     const li = document.createElement("li");
 
   
@@ -82,10 +120,13 @@ const agregaTarea = (e) => {
 
     //Agrega la tarea a la lista
     lista.appendChild(li);
+    */
 
     tareas.push({ texto: text, isChecked: false }); // Agregamos la tarea al array
+    // Ordenar el array antes de renderizar
+    tareas.sort((a, b) => a.isChecked - b.isChecked);
+    imprimeTareas();
     guardarEnLocalStorage(); // Guardamos el array actualizado en localStorage
-
     // Limpiar el input
     input.value = "";
     // Ocultar mensaje de lista vacía
@@ -93,18 +134,31 @@ const agregaTarea = (e) => {
   }
 };
 //Función eliminar tarea
-const eliminaTarea = (e) => {
-  const tarea = e.target.parentElement.parentElement;
-  const textoTarea = tarea.firstChild.textContent;
+const eliminaTarea = async (e) => {
 
-  lista.removeChild(tarea);
 
-  const indice = tareas.indexOf(textoTarea); // Encontrar el índice de la tarea
-  if (indice !== -1) {
-    tareas.splice(indice, 1); // Eliminar solo la tarea específica
-    guardarEnLocalStorage(); // Actualizar localStorage
-  }
+  const cambioAprobado = await sweetConfirmacionEliminar("¿Está seguro que desea eliminar esta tarea?");
 
+  if (cambioAprobado) {
+
+    const tarea = e.target.closest("li"); // Usamos closest para encontrar el li más cercano
+
+    // Obtener el texto de la tarea, aquí asumimos que el texto está en un label dentro de li
+    const textoTarea = tarea.querySelector("label").textContent.trim();  // O usa "span" si es un <span> el que contiene el texto
+
+    // Eliminar la tarea del array
+    const indice = tareas.findIndex(tarea => tarea.texto === textoTarea); // Usamos findIndex para buscar la tarea por su texto
+    if (indice !== -1) {
+      tareas.splice(indice, 1); // Eliminar solo la tarea específica
+      guardarEnLocalStorage(); // Actualizar localStorage
+      sweetError('Tarea eliminada.','','','info');
+      imprimeTareas();
+    }
+
+
+} else{
+  sweetError('No se han realizado cambios','','','info');
+}
   mostrarMensajeVacio();
 };
 //Función mostrar mensaje vacio
@@ -119,12 +173,14 @@ btnAgregar.addEventListener("click", agregaTarea);
 mostrarMensajeVacio();
 
 const imprimeTareas = () => {
+
+  lista.innerHTML = '';
   // Si ya existen tareas en localStorage, las mostramos
   if (tareas.length > 0) {
 
 
-      // Ordenar las tareas: true arriba
-      tareas.sort((a, b) => b.isChecked - a.isChecked);
+      // Ordenar las tareas: false arriba
+      tareas.sort((a, b) => a.isChecked - b.isChecked);
 
     // Recorremos el array de tareas y las agregamos al DOM
     tareas.forEach((tarea) => {
@@ -185,10 +241,25 @@ const imprimeTareas = () => {
 
     // Ocultar mensaje de lista vacía
     mensajeVacio.style.display = "none";
-  } else {
-    // Si no hay tareas, mostramos el mensaje de lista vacía
-    mensajeVacio.style.display = "block";
-  }
+  } 
+
+  mostrarMensajeVacio();
 };
 
 imprimeTareas();
+
+//Para habilitar el enter en la pantalla
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault(); // Evita que se envíe un formulario si está presente
+    const btnAgregar = document.querySelector(".btnAgregar");
+    if (btnAgregar) {
+      btnAgregar.click(); // Dispara el evento click del botón
+    }
+  }
+});
+
+
+
+
